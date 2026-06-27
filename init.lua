@@ -198,10 +198,40 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
 -- TIP: Disable arrow keys in normal mode
--- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
--- vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
--- vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
--- vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
+vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
+vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
+vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
+vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
+
+-- Toggle Neo-tree filesystem sidebar globally
+vim.keymap.set('n', '<leader>e', ':Neotree toggle<CR>', { silent = true, desc = 'Toggle File Explorer' })
+
+-- Focus back on the Neo-tree sidebar if it's already open
+vim.keymap.set('n', '<leader>fe', ':Neotree focus<CR>', { silent = true, desc = 'Focus File Explorer' })
+
+-- Toggle specifically the Git Status view or Buffers view in Neo-tree
+vim.keymap.set('n', '<leader>gs', ':Neotree git_status toggle<CR>', { silent = true, desc = 'Toggle Git Status' })
+vim.keymap.set('n', '<leader>be', ':Neotree buffers toggle<CR>', { silent = true, desc = 'Toggle Buffer Explorer' })
+
+-- =======================================================================
+-- BUFFERLINE / TAB NAVIGATING KEYMAPS
+-- =======================================================================
+
+-- Navigate open tabs (Shift + h/l)
+vim.keymap.set('n', '<S-l>', '<cmd>BufferLineCycleNext<CR>', { silent = true, desc = 'Go to Next Tab' })
+vim.keymap.set('n', '<S-h>', '<cmd>BufferLineCyclePrev<CR>', { silent = true, desc = 'Go to Previous Tab' })
+
+-- Reorder tabs manually (Move them left or right in the visual bar)
+vim.keymap.set('n', '<leader>bl', '<cmd>BufferLineMovePrev<CR>', { silent = true, desc = 'Move Tab Left' })
+vim.keymap.set('n', '<leader>br', '<cmd>BufferLineMoveNext<CR>', { silent = true, desc = 'Move Tab Right' })
+
+-- Quick jump to specific tab position
+vim.keymap.set('n', '<leader>1', '<cmd>BufferLineGoToBuffer 1<CR>', { silent = true, desc = 'Go to Tab 1' })
+vim.keymap.set('n', '<leader>2', '<cmd>BufferLineGoToBuffer 2<CR>', { silent = true, desc = 'Go to Tab 2' })
+vim.keymap.set('n', '<leader>3', '<cmd>BufferLineGoToBuffer 3<CR>', { silent = true, desc = 'Go to Tab 3' })
+
+-- Close the current tab/file safely without destroying your split window layout
+vim.keymap.set('n', '<leader>x', '<cmd>bdelete<CR>', { silent = true, desc = 'Close Current Tab' })
 
 -- Keybinds to make split navigation easier.
 --  Use CTRL+<hjkl> to switch between windows
@@ -257,10 +287,11 @@ rtp:prepend(lazypath)
 require('lazy').setup({
   -- NOTE: Plugins can be added via a link or github org/name. To run setup automatically, use `opts = {}`
   {
-  "pmizio/typescript-tools.nvim",
-  dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
-  opts = {},
-},
+    'pmizio/typescript-tools.nvim',
+    dependencies = { 'nvim-lua/plenary.nvim', 'neovim/nvim-lspconfig' },
+    opts = {},
+  },
+  { 'akinsho/bufferline.nvim', version = '*', dependencies = 'nvim-tree/nvim-web-devicons' },
   { 'NMAC427/guess-indent.nvim', opts = {} },
 
   -- Alternatively, use `config = function() ... end` for full control over the configuration.
@@ -605,13 +636,13 @@ require('lazy').setup({
       --  See `:help lsp-config` for information about keys and how to configure
       ---@type table<string, vim.lsp.Config>
       local servers = {
-          html = {},
-          cssls = {},
-          jsonls = {},
-          tailwindcss = {},
-          emmet_language_server = {},
-          markdown_oxide = {},
-          
+        html = {},
+        cssls = {},
+        jsonls = {},
+        tailwindcss = {},
+        emmet_language_server = {},
+        markdown_oxide = {},
+
         -- clangd = {},
         -- gopls = {},
         -- pyright = {},
@@ -621,7 +652,7 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`ts_ls`) will work just fine
-         ts_ls = {},
+        ts_ls = {},
 
         stylua = {}, -- Used to format Lua code
 
@@ -744,12 +775,10 @@ require('lazy').setup({
           -- `friendly-snippets` contains a variety of premade snippets.
           --    See the README about individual language/framework/plugin snippets:
           --    https://github.com/rafamadriz/friendly-snippets
-           {
-             'rafamadriz/friendly-snippets',
-             config = function()
-               require('luasnip.loaders.from_vscode').lazy_load()
-             end,
-           },
+          {
+            'rafamadriz/friendly-snippets',
+            config = function() require('luasnip.loaders.from_vscode').lazy_load() end,
+          },
         },
         opts = {},
       },
@@ -960,11 +989,11 @@ require('lazy').setup({
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
   -- require 'kickstart.plugins.debug',
-   require 'kickstart.plugins.indent_line',
-   require 'kickstart.plugins.lint',
-   require 'kickstart.plugins.autopairs',
-   require 'kickstart.plugins.neo-tree',
-   require 'kickstart.plugins.gitsigns', -- adds gitsigns recommended keymaps
+  require 'kickstart.plugins.indent_line',
+  require 'kickstart.plugins.lint',
+  require 'kickstart.plugins.autopairs',
+  require 'kickstart.plugins.neo-tree',
+  require 'kickstart.plugins.gitsigns', -- adds gitsigns recommended keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
@@ -1000,3 +1029,5 @@ require('lazy').setup({
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+vim.opt.termguicolors = true
+require('bufferline').setup {}
